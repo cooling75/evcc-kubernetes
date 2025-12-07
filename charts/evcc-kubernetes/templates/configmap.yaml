@@ -1,0 +1,12 @@
+{{- if .Values.evcc }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "evcc-kubernetes.fullname" . }}-config
+  labels:
+    {{- include "evcc-kubernetes.labels" . | nindent 4 }}
+data:
+  evcc.yaml: |- 
+  {{- toYaml .Values.evcc | nindent 12 }}
+{{- end }}
+  

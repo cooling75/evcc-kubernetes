@@ -1,0 +1,194 @@
+# Default values for evcc-kubernetes.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  repository: evcc/evcc
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+# This is to override the chart name.
+nameOverride: ""
+fullnameOverride: ""
+
+# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# This is for setting Kubernetes Annotations to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+# This is for setting Kubernetes Labels to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Set the services for the web interface and ocpp
+service:
+  web:
+    type: ClusterIP
+    port: 80
+    targetPort: 7070
+  ocpp:
+    type: LoadBalancer
+    port: 8887
+    targetPort: 8887
+
+# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  enabled: false
+  # className: nginx
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: evcc.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+    # - secretName: evcc-tls-secret
+    #   hosts:
+    #     - evcc.local
+
+# persistence settings for mountPath /root/.evcc to preserve evcc data
+persistence:
+  enabled: false
+  capacity: 500Mi
+  # Use an existing PVC for persistence
+  # existingClaim: evcc-test
+  # Use a specific storageClass for PVC
+  # storageClass: nfs-client
+
+  config:
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+livenessProbe:
+  httpGet:
+    path: /
+    port: 7070
+  initialDelaySeconds: 10
+  periodSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /
+    port: 7070
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# evcc specific data, please read the docs:
+# https://docs.evcc.io/docs/
+# I recommend to run the configuration example to create the configuration .yaml for your setup.
+# Without any values here, evcc will start in demo mode.
+evcc:
+  network:
+    schema: http
+    host: evcc.local # .local suffix announces the hostname on MDNS
+    port: 7070
+
+  log: debug
+  levels:
+    cache: error
+
+#   # unique installation id
+#   plant: 35833f444c5afd666dcbcc96e554de698e5bf97b04e3ecbc7fe403ee9093b676
+
+  # interval: 30s # control cycle interval
+
+#   mqtt:
+#     broker: mosquitto.local
+#     topic: evcc
+
+  meters:
+    - name: my_grid
+      type: template
+      template: demo-meter
+      usage: grid
+      power: -4000
+    - name: my_pv
+      type: template
+      template: demo-meter
+      usage: pv
+      power: 10000
+    - name: my_charger
+      type: template
+      template: demo-meter
+      usage: charge
+      power: 1000
+
+  chargers:
+    - name: my_charger
+      type: template
+      template: demo-charger
+      status: A # [A, B, C]
+      power: 3680 # optional
+      enabled: true # optional
+      maxcurrent: 16 # Definiert die maximale Stromstärke pro angeschlossener Phase mit welcher das Fahrzeug geladen werden soll (optional)
+      phases1p3p: false # optional
+
+#   vehicles:
+#   - type: template
+#     template: offline
+#     title: e-Golf
+#     capacity: 86  
+#     name: egolf
+#     icon: car
+
+  loadpoints:
+  - title: Carport
+    charger: my_charger
+    mode: pv
+
+  site:
+    title: Mein Zuhause
+    meters:
+      grid: my_grid
+      pv:
+      - my_pv

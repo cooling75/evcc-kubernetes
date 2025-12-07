@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "evcc-kubernetes.fullname" . }}-web
+  labels:
+    {{- include "evcc-kubernetes.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.web.type }}
+  ports:
+    - port: {{ .Values.service.web.port }}
+      targetPort: {{ .Values.service.web.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "evcc-kubernetes.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "evcc-kubernetes.fullname" . }}-ocpp
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  type: {{ .Values.service.ocpp.type }}
+  ports:
+  - port: {{ .Values.service.ocpp.port }}
+    targetPort: {{ .Values.service.ocpp.targetPort }}
+    protocol: TCP
+    name: {{ .Values.service.ocpp.name }}
+  selector:
+    {{- include "evcc-kubernetes.selectorLabels" . | nindent 4 }}
