@@ -57,6 +57,9 @@ service:
     port: 8887
     targetPort: 8887
 
+gatewayApi:
+  enabled: false
+
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
