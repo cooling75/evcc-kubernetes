@@ -1,5 +1,7 @@
 # evcc-kubernetes
 
+![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![AppVersion: 0.309.0](https://img.shields.io/badge/AppVersion-0.309.0-informational?style=flat-square)
+
 Installs evcc to Kubernetes via helm chart.
 
 ## Installation
