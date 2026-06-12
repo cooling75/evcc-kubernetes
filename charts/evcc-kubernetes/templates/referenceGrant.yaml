@@ -1,0 +1,15 @@
+{{- if .Values.gatewayApi.createReferenceGrant }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: ReferenceGrant
+metadata:
+  name: {{ include "evcc-kubernetes.fullname" . }}-reference-grant
+  namespace: {{ .Release.Namespace }}
+spec:
+  to:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+  from:
+    - group: ""
+      kind: Secret
+      namespace: {{ .Values.gatewayApi.gatewayNamespace | default .Release.Namespace }}
+{{- end }}
