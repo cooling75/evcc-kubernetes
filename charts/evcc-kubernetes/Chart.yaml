@@ -3,13 +3,13 @@ name: evcc-kubernetes
 description: Installs evcc in Kubernetes
 
 type: application
-version: 1.3.0
+version: 1.4.0
 
 sources:
   - https://evcc.io/
   - https://kubernetes.io/
   - https://github.com/evcc-io
   - https://github.com/evcc-io/evcc
-appVersion: "0.309.0"
+appVersion: "0.310.1"
 maintainers:
   - name: cooling75
