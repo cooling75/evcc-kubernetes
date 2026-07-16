@@ -1,6 +1,10 @@
 # evcc-kubernetes
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![AppVersion: 0.309.0](https://img.shields.io/badge/AppVersion-0.309.0-informational?style=flat-square)
+![GitHub Release Date](https://img.shields.io/github/release-date/cooling75/evcc-kubernetes) 
+ ![Dynamic YAML Badge](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcooling75%2Fevcc-kubernetes%2Frefs%2Fheads%2Fmain%2Fcharts%2Fevcc-kubernetes%2FChart.yaml&query=%24.version&label=AppVersion)
+ ![Dynamic YAML Badge](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcooling75%2Fevcc-kubernetes%2Frefs%2Fheads%2Fmain%2Fcharts%2Fevcc-kubernetes%2FChart.yaml&query=%24.appVersion&label=AppVersion)
+ ![GitHub Release](https://img.shields.io/github/v/release/cooling75/evcc-kubernetes)
+
 
 Installs evcc to Kubernetes via helm chart.
 
