@@ -59,6 +59,12 @@ service:
 
 gatewayApi:
   enabled: false
+  gatewayName: cluster-gateway
+  gatewayNamespace: kube-system
+  hostnames:
+    - "evcc.local"
+  # Create a ReferenceGrant to allow the Gateway to reference the Secret in another namespace (if needed)
+  createReferenceGrant: false
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
