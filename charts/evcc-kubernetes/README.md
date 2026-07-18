@@ -2,7 +2,7 @@
 
 ![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.309.0](https://img.shields.io/badge/AppVersion-0.309.0-informational?style=flat-square)
 
-Installs evcc in Kubernetes
+Installs [evcc](https://evcc.io/) in Kubernetes
 
 ## Source Code
 
