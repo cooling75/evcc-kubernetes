@@ -6,7 +6,7 @@
  ![GitHub Release](https://img.shields.io/github/v/release/cooling75/evcc-kubernetes)
 
 
-Installs evcc to Kubernetes via helm chart.
+Installs [evcc](https://evcc.io/) to Kubernetes via helm chart.
 
 ## Installation
 
