@@ -1,6 +1,21 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^charts/evcc-kubernetes/Chart\\.yaml$"],
+      "matchStrings": ["appVersion:\\s*\"?(?<currentValue>[0-9.]+)\"?"],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "evcc/evcc"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchFileNames": ["charts/evcc-kubernetes/Chart.yaml"],
+      "matchDatasources": ["docker"],
+      "matchDepNames": ["evcc/evcc"],
+      "bumpVersion": "patch"
+    }
   ]
 }
