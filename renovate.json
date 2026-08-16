@@ -4,7 +4,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^charts/evcc-kubernetes/Chart\\.yaml$"],
+      "managerFilePatterns": [
+        "/^charts/evcc-kubernetes/Chart\\.yaml$/"
+      ],
       "matchStrings": ["appVersion:\\s*\"?(?<currentValue>[0-9.]+)\"?"],
       "datasourceTemplate": "docker",
       "depNameTemplate": "evcc/evcc"
