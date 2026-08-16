@@ -10,6 +10,6 @@ sources:
   - https://kubernetes.io/
   - https://github.com/evcc-io
   - https://github.com/evcc-io/evcc
-appVersion: "0.313.3"
+appVersion: "0.314.1"
 maintainers:
   - name: cooling75
