@@ -1,0 +1,74 @@
+name: Bump Helm Chart Version
+
+# Läuft bei jedem Renovate-PR, der die Chart.yaml ändert (z.B. wenn Renovate
+# die appVersion auf eine neue evcc-Version aktualisiert), und erhöht dabei
+# automatisch die Chart-eigene "version" (Patch-Level) im selben PR.
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'charts/evcc-kubernetes/Chart.yaml'
+
+permissions:
+  contents: write
+
+jobs:
+  bump-chart-version:
+    # Nur für Branches, die Renovate erstellt hat
+    if: startsWith(github.head_ref, 'renovate/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR-Branch auschecken
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Base-Branch nachladen
+        run: git fetch origin ${{ github.base_ref }}
+
+      - name: Prüfen, ob sich appVersion geändert hat
+        id: check
+        run: |
+          CHART_FILE="charts/evcc-kubernetes/Chart.yaml"
+          BASE_APPVERSION=$(git show "origin/${{ github.base_ref }}:$CHART_FILE" | grep '^appVersion:' | sed -E 's/appVersion:\s*"?([^"]+)"?.*/\1/')
+          HEAD_APPVERSION=$(grep '^appVersion:' "$CHART_FILE" | sed -E 's/appVersion:\s*"?([^"]+)"?.*/\1/')
+
+          echo "head_appversion=$HEAD_APPVERSION" >> "$GITHUB_OUTPUT"
+
+          if [ "$BASE_APPVERSION" != "$HEAD_APPVERSION" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Chart-Version patchen
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          CHART_FILE="charts/evcc-kubernetes/Chart.yaml"
+
+          # Ausgangspunkt ist immer die Version im Base-Branch (main),
+          # damit der Schritt idempotent ist (mehrfaches Laufen liefert
+          # dasselbe Ergebnis, auch nach einem Rebase durch Renovate).
+          BASE_VERSION=$(git show "origin/${{ github.base_ref }}:$CHART_FILE" | grep '^version:' | sed -E 's/version:\s*"?([^"]+)"?.*/\1/')
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
+          NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+
+          sed -i -E "s/^version:.*/version: ${NEW_VERSION}/" "$CHART_FILE"
+          echo "new_version=${NEW_VERSION}" >> "$GITHUB_ENV"
+          echo "Chart-Version: ${BASE_VERSION} -> ${NEW_VERSION}"
+
+      - name: Änderung committen und pushen
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          if git diff --quiet; then
+            echo "Version bereits aktuell, nichts zu committen."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add charts/evcc-kubernetes/Chart.yaml
+          git commit -m "chore: bump chart version to ${new_version} for evcc ${{ steps.check.outputs.head_appversion }}"
+          git push origin "HEAD:${{ github.head_ref }}"

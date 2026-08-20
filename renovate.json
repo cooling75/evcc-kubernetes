@@ -11,13 +11,5 @@
       "datasourceTemplate": "docker",
       "depNameTemplate": "evcc/evcc"
     }
-  ],
-  "packageRules": [
-    {
-      "matchFileNames": ["charts/evcc-kubernetes/Chart.yaml"],
-      "matchDatasources": ["docker"],
-      "matchDepNames": ["evcc/evcc"],
-      "bumpVersion": "patch"
-    }
   ]
 }
