@@ -6,6 +6,10 @@ metadata:
     {{- include "evcc-kubernetes.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  {{- if .Values.persistence.enabled }}
+  strategy:
+    type: Recreate
+  {{- end }}
   selector:
     matchLabels:
       {{- include "evcc-kubernetes.selectorLabels" . | nindent 6 }}

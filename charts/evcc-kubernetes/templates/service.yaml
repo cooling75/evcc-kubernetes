@@ -19,13 +19,13 @@ kind: Service
 metadata:
   name: {{ include "evcc-kubernetes.fullname" . }}-ocpp
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- include "evcc-kubernetes.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.ocpp.type }}
   ports:
   - port: {{ .Values.service.ocpp.port }}
     targetPort: {{ .Values.service.ocpp.targetPort }}
     protocol: TCP
-    name: {{ .Values.service.ocpp.name }}
+    name: ocpp
   selector:
     {{- include "evcc-kubernetes.selectorLabels" . | nindent 4 }}

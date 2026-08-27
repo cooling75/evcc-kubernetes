@@ -89,10 +89,8 @@ persistence:
   capacity: 500Mi
   # Use an existing PVC for persistence
   # existingClaim: evcc-test
-  # Use a specific storageClass for PVC
+  # Use a specific storageClass for PVC ()
   # storageClass: nfs-client
-
-  config:
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
