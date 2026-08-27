@@ -1,8 +1,14 @@
 # evcc-kubernetes
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.309.0](https://img.shields.io/badge/AppVersion-0.309.0-informational?style=flat-square)
+![Version: 1.7.4](https://img.shields.io/badge/Version-1.7.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.314.3](https://img.shields.io/badge/AppVersion-0.314.3-informational?style=flat-square)
 
-Installs [evcc](https://evcc.io/) in Kubernetes
+Installs evcc in Kubernetes
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| cooling75 |  |  |
 
 ## Source Code
 
@@ -51,7 +57,11 @@ Installs [evcc](https://evcc.io/) in Kubernetes
 | evcc.site.meters.pv[0] | string | `"my_pv"` |  |
 | evcc.site.title | string | `"Mein Zuhause"` |  |
 | fullnameOverride | string | `""` |  |
+| gatewayApi.createReferenceGrant | bool | `false` |  |
 | gatewayApi.enabled | bool | `false` |  |
+| gatewayApi.gatewayName | string | `"cluster-gateway"` |  |
+| gatewayApi.gatewayNamespace | string | `"kube-system"` |  |
+| gatewayApi.hostnames[0] | string | `"evcc.local"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"evcc/evcc"` |  |
 | image.tag | string | `""` |  |
@@ -69,7 +79,6 @@ Installs [evcc](https://evcc.io/) in Kubernetes
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.capacity | string | `"500Mi"` |  |
-| persistence.config | string | `nil` |  |
 | persistence.enabled | bool | `false` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
