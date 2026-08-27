@@ -1,8 +1,8 @@
 name: Bump Helm Chart Version
 
-# Läuft bei jedem Renovate-PR, der die Chart.yaml ändert (z.B. wenn Renovate
-# die appVersion auf eine neue evcc-Version aktualisiert), und erhöht dabei
-# automatisch die Chart-eigene "version" (Patch-Level) im selben PR.
+# Runs on every Renovate PR that changes Chart.yaml (e.g. when Renovate
+# bumps appVersion to a new evcc version), and automatically increments
+# the chart's own "version" (patch level) in the same PR.
 
 on:
   pull_request:
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   bump-chart-version:
-    # Nur für Branches, die Renovate erstellt hat
+    # Only for branches created by Renovate
     if: startsWith(github.head_ref, 'renovate/')
     runs-on: ubuntu-latest
     steps:
@@ -47,9 +47,9 @@ jobs:
         run: |
           CHART_FILE="charts/evcc-kubernetes/Chart.yaml"
 
-          # Ausgangspunkt ist immer die Version im Base-Branch (main),
-          # damit der Schritt idempotent ist (mehrfaches Laufen liefert
-          # dasselbe Ergebnis, auch nach einem Rebase durch Renovate).
+          # The starting point is always the version on the base branch (main),
+          # so this step is idempotent (running it multiple times yields the
+          # same result, even after a rebase by Renovate).
           BASE_VERSION=$(git show "origin/${{ github.base_ref }}:$CHART_FILE" | grep '^version:' | sed -E 's/version:\s*"?([^"]+)"?.*/\1/')
 
           IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
@@ -58,6 +58,12 @@ jobs:
           sed -i -E "s/^version:.*/version: ${NEW_VERSION}/" "$CHART_FILE"
           echo "new_version=${NEW_VERSION}" >> "$GITHUB_ENV"
           echo "Chart-Version: ${BASE_VERSION} -> ${NEW_VERSION}"
+
+      # Updates README.md (version/appVersion badges, values table) to match
+      # the bumped Chart.yaml, so the docs are committed in the same PR.
+      - name: Helm Docs GitHub Action
+        if: steps.check.outputs.changed == 'true'
+        uses: losisin/helm-docs-github-action@v2.0.0
 
       - name: Änderung committen und pushen
         if: steps.check.outputs.changed == 'true'
@@ -69,6 +75,6 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add charts/evcc-kubernetes/Chart.yaml
+          git add charts/evcc-kubernetes/Chart.yaml charts/evcc-kubernetes/README.md
           git commit -m "chore: bump chart version to ${new_version} for evcc ${{ steps.check.outputs.head_appversion }}"
           git push origin "HEAD:${{ github.head_ref }}"

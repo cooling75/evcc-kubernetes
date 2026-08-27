@@ -27,6 +27,20 @@ jobs:
       - name: Helm Docs GitHub Action
         uses: losisin/helm-docs-github-action@v2.0.0
 
+      # Covers the case where the generated docs change without
+      # bump-chart-version.yml having run (e.g. a values.yaml change in a
+      # PR that doesn't come from Renovate and doesn't touch Chart.yaml).
+      - name: Doku-Änderungen committen und pushen
+        run: |
+          if git diff --quiet; then
+            echo "Keine Doku-Änderungen."
+            exit 0
+          fi
+
+          git add charts/evcc-kubernetes/README.md
+          git commit -m "docs: update helm-docs README [skip ci]"
+          git push origin "HEAD:${{ github.event.workflow_run.head_branch }}"
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
         with:
