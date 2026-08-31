@@ -25,7 +25,7 @@ jobs:
 
       # Create markdown documentation for the charts using helm-docs
       - name: Helm Docs GitHub Action
-        uses: losisin/helm-docs-github-action@v2.0.0
+        uses: losisin/helm-docs-github-action@v2.0.1
 
       # Covers the case where the generated docs change without
       # bump-chart-version.yml having run (e.g. a values.yaml change in a
