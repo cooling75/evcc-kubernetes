@@ -63,7 +63,7 @@ jobs:
       # the bumped Chart.yaml, so the docs are committed in the same PR.
       - name: Helm Docs GitHub Action
         if: steps.check.outputs.changed == 'true'
-        uses: losisin/helm-docs-github-action@v2.0.0
+        uses: losisin/helm-docs-github-action@v2.0.1
 
       - name: Änderung committen und pushen
         if: steps.check.outputs.changed == 'true'
