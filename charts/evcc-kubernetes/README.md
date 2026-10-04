@@ -1,6 +1,6 @@
 # evcc-kubernetes
 
-![Version: 1.7.8](https://img.shields.io/badge/Version-1.7.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.316.1](https://img.shields.io/badge/AppVersion-0.316.1-informational?style=flat-square)
+![Version: 1.7.9](https://img.shields.io/badge/Version-1.7.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.316.2](https://img.shields.io/badge/AppVersion-0.316.2-informational?style=flat-square)
 
 Installs evcc in Kubernetes
 
