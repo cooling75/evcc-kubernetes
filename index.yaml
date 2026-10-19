@@ -2,6 +2,23 @@ apiVersion: v1
 entries:
   evcc-kubernetes:
   - apiVersion: v2
+    appVersion: 0.317.2
+    created: "2026-10-19T23:34:24.659130143Z"
+    description: Installs evcc in Kubernetes
+    digest: 777d512497f2b27b70700e57a5a6d6bc435c646e5a224de9f11678939b05c72a
+    maintainers:
+    - name: cooling75
+    name: evcc-kubernetes
+    sources:
+    - https://evcc.io/
+    - https://kubernetes.io/
+    - https://github.com/evcc-io
+    - https://github.com/evcc-io/evcc
+    type: application
+    urls:
+    - https://github.com/cooling75/evcc-kubernetes/releases/download/evcc-kubernetes-1.7.12/evcc-kubernetes-1.7.12.tgz
+    version: 1.7.12
+  - apiVersion: v2
     appVersion: 0.317.1
     created: "2026-10-11T20:30:57.676631215Z"
     description: Installs evcc in Kubernetes
@@ -322,4 +339,4 @@ entries:
     urls:
     - https://github.com/cooling75/evcc-kubernetes/releases/download/evcc-kubernetes-1.2.0/evcc-kubernetes-1.2.0.tgz
     version: 1.2.0
-generated: "2026-10-11T20:30:57.676697914Z"
+generated: "2026-10-19T23:34:24.659215852Z"
