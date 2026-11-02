@@ -20,3 +20,13 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
+{{- if not .Values.evcc }}
+
+2. evcc runs without a config file and is set up via its web interface.
+   On the first visit you will be asked to set an admin password.
+{{- end }}
+{{- if not .Values.persistence.enabled }}
+
+WARNING: persistence is disabled. The evcc database (charging sessions and
+everything set up in the web interface) is lost whenever the pod restarts.
+{{- end }}

@@ -1,0 +1,3 @@
+# Intentionally empty: CI installs the chart with its default values (setup
+# via the web interface, persistence enabled). ct only installs the defaults
+# on its own when there are no ci/*-values.yaml files.
