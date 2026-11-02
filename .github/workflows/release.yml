@@ -8,7 +8,9 @@ on:
 
 jobs:
   release:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # Only release after a push to main: CI also runs for pull requests, and
+    # the branches filter above would match a fork PR from a branch named main.
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -27,9 +29,9 @@ jobs:
       - name: Helm Docs GitHub Action
         uses: losisin/helm-docs-github-action@v2.0.1
 
-      # Covers the case where the generated docs change without
-      # bump-chart-version.yml having run (e.g. a values.yaml change in a
-      # PR that doesn't come from Renovate and doesn't touch Chart.yaml).
+      # Keeps the README in sync with Chart.yaml and values.yaml after every
+      # merge, e.g. the version badges after Renovate bumped appVersion and
+      # the chart version (see bumpVersions in renovate.json).
       - name: Doku-Änderungen committen und pushen
         run: |
           if git diff --quiet; then

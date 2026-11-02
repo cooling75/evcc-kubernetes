@@ -137,7 +137,7 @@ affinity: {}
 evcc:
   network:
     schema: http
-    host: evcc.local # .local suffix announces the hostname on MDNS
+    host: evcc.local  # .local suffix announces the hostname on MDNS
     port: 7070
 
   log: debug
@@ -174,17 +174,17 @@ evcc:
     - name: my_charger
       type: template
       template: demo-charger
-      status: A # [A, B, C]
-      power: 3680 # optional
-      enabled: true # optional
-      maxcurrent: 16 # Definiert die maximale Stromstärke pro angeschlossener Phase mit welcher das Fahrzeug geladen werden soll (optional)
-      phases1p3p: false # optional
+      status: A  # [A, B, C]
+      power: 3680  # optional
+      enabled: true  # optional
+      maxcurrent: 16  # Definiert die maximale Stromstärke pro angeschlossener Phase mit welcher das Fahrzeug geladen werden soll (optional)
+      phases1p3p: false  # optional
 
 #   vehicles:
 #   - type: template
 #     template: offline
 #     title: e-Golf
-#     capacity: 86  
+#     capacity: 86
 #     name: egolf
 #     icon: car
 
