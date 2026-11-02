@@ -11,5 +11,18 @@
       "datasourceTemplate": "docker",
       "depNameTemplate": "evcc/evcc"
     }
+  ],
+  "packageRules": [
+    {
+      "matchDepNames": ["evcc/evcc"],
+      "bumpVersions": [
+        {
+          "name": "Chart version",
+          "filePatterns": ["{{packageFileDir}}/Chart.yaml"],
+          "matchStrings": ["version:\\s*(?<version>[^\\s]+)"],
+          "bumpType": "patch"
+        }
+      ]
+    }
   ]
 }
