@@ -1,6 +1,6 @@
 # evcc-kubernetes
 
-![Version: 1.7.16](https://img.shields.io/badge/Version-1.7.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.318.2](https://img.shields.io/badge/AppVersion-0.318.2-informational?style=flat-square)
+![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.318.2](https://img.shields.io/badge/AppVersion-0.318.2-informational?style=flat-square)
 
 Installs evcc in Kubernetes
 
@@ -22,40 +22,7 @@ Installs evcc in Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| evcc.chargers[0].enabled | bool | `true` |  |
-| evcc.chargers[0].maxcurrent | int | `16` |  |
-| evcc.chargers[0].name | string | `"my_charger"` |  |
-| evcc.chargers[0].phases1p3p | bool | `false` |  |
-| evcc.chargers[0].power | int | `3680` |  |
-| evcc.chargers[0].status | string | `"A"` |  |
-| evcc.chargers[0].template | string | `"demo-charger"` |  |
-| evcc.chargers[0].type | string | `"template"` |  |
-| evcc.levels.cache | string | `"error"` |  |
-| evcc.loadpoints[0].charger | string | `"my_charger"` |  |
-| evcc.loadpoints[0].mode | string | `"pv"` |  |
-| evcc.loadpoints[0].title | string | `"Carport"` |  |
-| evcc.log | string | `"debug"` |  |
-| evcc.meters[0].name | string | `"my_grid"` |  |
-| evcc.meters[0].power | int | `-4000` |  |
-| evcc.meters[0].template | string | `"demo-meter"` |  |
-| evcc.meters[0].type | string | `"template"` |  |
-| evcc.meters[0].usage | string | `"grid"` |  |
-| evcc.meters[1].name | string | `"my_pv"` |  |
-| evcc.meters[1].power | int | `10000` |  |
-| evcc.meters[1].template | string | `"demo-meter"` |  |
-| evcc.meters[1].type | string | `"template"` |  |
-| evcc.meters[1].usage | string | `"pv"` |  |
-| evcc.meters[2].name | string | `"my_charger"` |  |
-| evcc.meters[2].power | int | `1000` |  |
-| evcc.meters[2].template | string | `"demo-meter"` |  |
-| evcc.meters[2].type | string | `"template"` |  |
-| evcc.meters[2].usage | string | `"charge"` |  |
-| evcc.network.host | string | `"evcc.local"` |  |
-| evcc.network.port | int | `7070` |  |
-| evcc.network.schema | string | `"http"` |  |
-| evcc.site.meters.grid | string | `"my_grid"` |  |
-| evcc.site.meters.pv[0] | string | `"my_pv"` |  |
-| evcc.site.title | string | `"Mein Zuhause"` |  |
+| evcc | object | `{}` |  |
 | fullnameOverride | string | `""` |  |
 | gatewayApi.createReferenceGrant | bool | `false` |  |
 | gatewayApi.enabled | bool | `false` |  |
@@ -79,7 +46,7 @@ Installs evcc in Kubernetes
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.capacity | string | `"500Mi"` |  |
-| persistence.enabled | bool | `false` |  |
+| persistence.enabled | bool | `true` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |

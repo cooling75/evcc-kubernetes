@@ -6,18 +6,32 @@ metadata:
     {{- include "evcc-kubernetes.labels" . | nindent 4 }}
 spec:
   replicas: 1
-  {{- if .Values.persistence.enabled }}
+  {{- /*
+    evcc must never run twice (it controls the chargers, and its database is on a
+    ReadWriteOnce volume), so the old pod is stopped before the new one starts.
+    Recreate would do the same, but switching an existing RollingUpdate deployment
+    to it fails with server-side apply (Helm 4) because of the defaulted
+    rollingUpdate block.
+  */}}
   strategy:
-    type: Recreate
-  {{- end }}
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       {{- include "evcc-kubernetes.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- if or .Values.evcc .Values.podAnnotations }}
       annotations:
+        {{- if .Values.evcc }}
+        {{- /* Restart the pod when the evcc config changes; subPath mounts are never updated. */}}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- end }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- end }}
       labels:
         {{- include "evcc-kubernetes.labels" . | nindent 8 }}
@@ -61,10 +75,13 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if or .Values.evcc .Values.persistence.enabled .Values.volumeMounts }}
           volumeMounts:
+          {{- if .Values.evcc }}
             - name: config
               mountPath: /etc/evcc.yaml
               subPath: evcc.yaml
+          {{- end }}
           {{- if .Values.persistence.enabled }}
             - name: data
               mountPath: /root/.evcc/
@@ -72,10 +89,14 @@ spec:
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- end }}
+      {{- if or .Values.evcc .Values.persistence.enabled .Values.volumes }}
       volumes:
+        {{- if .Values.evcc }}
         - name: config
           configMap:
             name: {{ include "evcc-kubernetes.fullname" . }}-config
+        {{- end }}
         {{- if .Values.persistence.enabled }}
         - name: data
           persistentVolumeClaim:
@@ -87,6 +108,7 @@ spec:
         {{- end }}
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
