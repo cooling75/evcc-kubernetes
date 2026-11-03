@@ -10,6 +10,16 @@ spec:
   containers:
     - name: wget
       image: busybox:1.37
-      command: ['wget']
-      args: ['-q', '--spider', 'http://{{ include "evcc-kubernetes.fullname" . }}-web:{{ .Values.service.web.port }}']
+      # A freshly ready pod can take a moment to show up behind the service
+      # (until then the connection is refused), so retry for up to a minute.
+      command: ['sh', '-c']
+      args:
+        - |
+          url='http://{{ include "evcc-kubernetes.fullname" . }}-web:{{ .Values.service.web.port }}'
+          for i in $(seq 1 30); do
+            wget -q --spider "$url" && exit 0
+            sleep 2
+          done
+          echo "no response from $url"
+          exit 1
   restartPolicy: Never
