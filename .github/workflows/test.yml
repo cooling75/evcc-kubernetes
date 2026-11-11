@@ -50,7 +50,7 @@ jobs:
           fi
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.15.1
+        uses: helm/kind-action@v1.15.2
 
       # Always install the (single) chart and run its helm test, so that
       # workflow-only PRs such as Renovate action updates are exercised too.
