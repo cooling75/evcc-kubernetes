@@ -1,3 +1,9 @@
+{{- if .Values.evcc }}
+{{- $evccPort := dig "network" "port" nil .Values.evcc }}
+{{- if and $evccPort (ne (int $evccPort) (int .Values.service.web.targetPort)) }}
+{{- fail (printf "evcc.network.port (%v) must match service.web.targetPort (%v): evcc listens on evcc.network.port, the probes and the web service use service.web.targetPort" $evccPort .Values.service.web.targetPort) }}
+{{- end }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -58,10 +64,10 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.web.port }}
+              containerPort: {{ .Values.service.web.targetPort }}
               protocol: TCP
             - name: ocpp
-              containerPort: {{ .Values.service.ocpp.port }}
+              containerPort: {{ .Values.service.ocpp.targetPort }}
               protocol: TCP
           {{- with .Values.livenessProbe }}
           livenessProbe:
