@@ -46,7 +46,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# Set the services for the web interface and ocpp
+# Set the services for the web interface and ocpp. targetPort is the port evcc
+# listens on in the container; the probes use it via the port name "http".
 service:
   web:
     type: ClusterIP
@@ -111,13 +112,13 @@ resources: {}
 livenessProbe:
   httpGet:
     path: /
-    port: 7070
+    port: http
   initialDelaySeconds: 10
   periodSeconds: 10
 readinessProbe:
   httpGet:
     path: /
-    port: 7070
+    port: http
   initialDelaySeconds: 10
   periodSeconds: 10
 

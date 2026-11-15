@@ -1,28 +1,48 @@
-1. Get the application URL by running these commands:
+{{- $fullname := include "evcc-kubernetes.fullname" . }}
+{{- $ns := .Release.Namespace }}
+{{- $lbAddress := "{.status.loadBalancer.ingress[0].ip}{.status.loadBalancer.ingress[0].hostname}" }}
+1. Open the evcc web interface:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
   {{- range .paths }}
   http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
   {{- end }}
 {{- end }}
-{{- else if contains "NodePort" .Values.service.web.type }}
-  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "evcc-kubernetes.fullname" . }})
-  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+{{- else if .Values.gatewayApi.enabled }}
+  Via the Gateway {{ .Values.gatewayApi.gatewayNamespace | default $ns }}/{{ .Values.gatewayApi.gatewayName }} (use https:// if its listener terminates TLS):
+{{- range .Values.gatewayApi.hostnames }}
+  http://{{ . }}/
+{{- end }}
+{{- else if eq .Values.service.web.type "NodePort" }}
+  export NODE_PORT=$(kubectl get --namespace {{ $ns }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ $fullname }}-web)
+  export NODE_IP=$(kubectl get nodes -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
-{{- else if contains "LoadBalancer" .Values.service.web.type }}
-     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-           You can watch its status by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "evcc-kubernetes.fullname" . }}'
-  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "evcc-kubernetes.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+{{- else if eq .Values.service.web.type "LoadBalancer" }}
+  It may take a few minutes for the LoadBalancer IP to be available.
+  You can watch its status with: kubectl get --namespace {{ $ns }} svc -w {{ $fullname }}-web
+  export SERVICE_IP=$(kubectl get svc --namespace {{ $ns }} {{ $fullname }}-web -o jsonpath="{{ $lbAddress }}")
   echo http://$SERVICE_IP:{{ .Values.service.web.port }}
-{{- else if contains "ClusterIP" .Values.service.web.type }}
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "evcc-kubernetes.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-  echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- else }}
+  kubectl --namespace {{ $ns }} port-forward svc/{{ $fullname }}-web 8080:{{ .Values.service.web.port }}
+  Then open http://127.0.0.1:8080
+{{- end }}
+
+2. Chargers that connect to evcc via OCPP need this backend URL:
+{{- if eq .Values.service.ocpp.type "LoadBalancer" }}
+  ws://<external IP>:{{ .Values.service.ocpp.port }}/<stationId>
+  The external IP of the OCPP service:
+  kubectl get svc --namespace {{ $ns }} {{ $fullname }}-ocpp -o jsonpath="{{ $lbAddress }}"
+{{- else if eq .Values.service.ocpp.type "NodePort" }}
+  ws://<node IP>:<node port>/<stationId>
+  The node port of the OCPP service:
+  kubectl get --namespace {{ $ns }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ $fullname }}-ocpp
+{{- else }}
+  The OCPP service is of type {{ .Values.service.ocpp.type }} and only reachable inside the cluster.
+  For chargers on your network, set service.ocpp.type to LoadBalancer or NodePort.
 {{- end }}
 {{- if not .Values.evcc }}
 
-2. evcc runs without a config file and is set up via its web interface.
+3. evcc runs without a config file and is set up via its web interface.
    On the first visit you will be asked to set an admin password.
 {{- end }}
 {{- if not .Values.persistence.enabled }}

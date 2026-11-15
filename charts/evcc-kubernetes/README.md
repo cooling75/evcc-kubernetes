@@ -1,6 +1,6 @@
 # evcc-kubernetes
 
-![Version: 1.8.3](https://img.shields.io/badge/Version-1.8.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.319.0](https://img.shields.io/badge/AppVersion-0.319.0-informational?style=flat-square)
+![Version: 1.8.4](https://img.shields.io/badge/Version-1.8.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.319.0](https://img.shields.io/badge/AppVersion-0.319.0-informational?style=flat-square)
 
 Installs evcc in Kubernetes
 
@@ -40,7 +40,7 @@ Installs evcc in Kubernetes
 | ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
 | ingress.tls | list | `[]` |  |
 | livenessProbe.httpGet.path | string | `"/"` |  |
-| livenessProbe.httpGet.port | int | `7070` |  |
+| livenessProbe.httpGet.port | string | `"http"` |  |
 | livenessProbe.initialDelaySeconds | int | `10` |  |
 | livenessProbe.periodSeconds | int | `10` |  |
 | nameOverride | string | `""` |  |
@@ -51,7 +51,7 @@ Installs evcc in Kubernetes
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
 | readinessProbe.httpGet.path | string | `"/"` |  |
-| readinessProbe.httpGet.port | int | `7070` |  |
+| readinessProbe.httpGet.port | string | `"http"` |  |
 | readinessProbe.initialDelaySeconds | int | `10` |  |
 | readinessProbe.periodSeconds | int | `10` |  |
 | resources | object | `{}` |  |
